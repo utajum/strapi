@@ -16,15 +16,23 @@ import { UploadingAssetCard } from '../../AssetCard/UploadingAssetCard';
 import { getTrad } from '../../../utils';
 import { AssetType, AssetSource } from '../../../constants';
 
-export const PendingAssetStep = ({ onClose, assets, onClickAddAsset }) => {
+export const PendingAssetStep = ({ onClose, assets, onClickAddAsset, uploadAssets, setAsset }) => {
   const { formatMessage } = useIntl();
-  const [isUploading, setIsUploading] = useState(false);
+  // const [isUploading, setIsUploading] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    setIsUploading(true);
+    // setIsUploading(true);
+    uploadAssets();
   };
+
+  const notUploadedAssets = assets.filter(({ isUploaded }) => !isUploaded);
+  const isUploading = notUploadedAssets.some(({ isUploading }) => {
+    console.log(isUploading);
+    return isUploading;
+  });
+  console.log(isUploading);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -69,16 +77,22 @@ export const PendingAssetStep = ({ onClose, assets, onClickAddAsset }) => {
               {assets.map((asset, idx) => {
                 const assetKey = `${asset.url}-${idx}`;
 
-                if (isUploading) {
+                if (asset.isUploaded) {
+                  return null;
+                }
+
+                if (asset.isUploading || asset.isUploadCancel) {
                   return (
                     <GridItem col={4} key={assetKey}>
                       <UploadingAssetCard
                         id={assetKey}
                         name={asset.name}
+                        assetIndex={idx}
                         extension={asset.ext}
                         assetType={asset.type}
                         file={asset.rawFile}
                         size="S"
+                        setAsset={setAsset}
                       />
                     </GridItem>
                   );

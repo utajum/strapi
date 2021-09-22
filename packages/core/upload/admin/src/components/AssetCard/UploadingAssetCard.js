@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
@@ -53,7 +53,7 @@ const CancelButton = styled.button`
   }
 `;
 
-export const UploadingAssetCard = ({ name, extension, assetType, file }) => {
+export const UploadingAssetCard = ({ name, extension, assetType, file, assetIndex, setAsset }) => {
   const { upload, cancel, error, progress } = useUpload();
   const { formatMessage } = useIntl();
 
@@ -80,6 +80,15 @@ export const UploadingAssetCard = ({ name, extension, assetType, file }) => {
     upload(file);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const refI = useRef(assetIndex);
+
+  useEffect(() => {
+    if (progress === 100) {
+      setAsset(refI.current, 'isUploading', false);
+      setAsset(refI.current, 'isUploaded', true);
+    }
+  }, [progress, setAsset]);
 
   return (
     <Stack size={1}>

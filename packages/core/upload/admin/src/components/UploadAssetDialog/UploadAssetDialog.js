@@ -23,13 +23,39 @@ export const UploadAssetDialog = ({ onSuccess, onClose }) => {
     setStep(Steps.AddAsset);
   };
 
+  const uploadAssets = () => {
+    setAssets(prev => prev.map(current => ({ ...current, isUploading: true })));
+  };
+
+  const setAsset = (assetIndex, keyToUpdate, value) => {
+    setAssets(prev => {
+      return prev.map((asset, index) => {
+        if (index === assetIndex) {
+          return { ...asset, [keyToUpdate]: value };
+        }
+
+        return asset;
+      });
+    });
+  };
+
   return (
     <ModalLayout onClose={onClose} labelledBy="title">
       {step === Steps.AddAsset && (
-        <AddAssetStep onClose={onClose} onAddAsset={handleAddToPendingAssets} />
+        <AddAssetStep
+          onClose={onClose}
+          onAddAsset={handleAddToPendingAssets}
+          uploadAssets={uploadAssets}
+        />
       )}
       {step === Steps.PendingAsset && (
-        <PendingAssetStep onClose={onClose} assets={assets} onClickAddAsset={moveToAddAsset} />
+        <PendingAssetStep
+          onClose={onClose}
+          assets={assets}
+          onClickAddAsset={moveToAddAsset}
+          uploadAssets={uploadAssets}
+          setAsset={setAsset}
+        />
       )}
     </ModalLayout>
   );

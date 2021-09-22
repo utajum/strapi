@@ -56,6 +56,9 @@ export const FromComputerForm = ({ onClose, onAddAssets }) => {
         ext: file.name.split('.').pop(),
         mime: file.type,
         rawFile: file,
+        isUploading: false,
+        isUploadCancel: false,
+        isUploaded: false,
       });
     }
 
