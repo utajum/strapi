@@ -47,6 +47,7 @@ const createModule = (namespace, rawModule, strapi) => {
       await (rawModule.register && rawModule.register({ strapi }));
     },
     async destroy() {
+      console.log('destroy', namespace);
       if (called.destroy) {
         throw new Error(`Destroy for ${namespace} has already been called`);
       }

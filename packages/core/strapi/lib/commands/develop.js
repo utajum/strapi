@@ -49,6 +49,7 @@ module.exports = async function({ build, watchAdmin, polling, browser }) {
       }
 
       cluster.on('message', (worker, message) => {
+        console.log({ message });
         switch (message) {
           case 'reload':
             logger.info('The server is restarting\n');
@@ -69,7 +70,9 @@ module.exports = async function({ build, watchAdmin, polling, browser }) {
       cluster.fork();
     }
 
+    console.log('fork');
     if (cluster.isWorker) {
+      console.log('isWORKER');
       const strapiInstance = strapi({
         dir,
         autoReload: true,
@@ -84,6 +87,7 @@ module.exports = async function({ build, watchAdmin, polling, browser }) {
       });
 
       process.on('message', async message => {
+        console.log('message 2', message);
         switch (message) {
           case 'isKilled':
             await strapiInstance.server.destroy();
